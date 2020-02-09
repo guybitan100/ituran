@@ -1,0 +1,13 @@
+<suite name="Ituran Test" verbose="1" parallel="methods">
+    <parameter name="selenium.browser" value="chrome" />
+    <parameter name="selenium.url" value="https://www.youtube.com" />
+    <parameter name="selenium.email" value="yochay.nativ@gmail.com" />
+    <parameter name="selenium.password" value="pass161176$" />
+
+    <test name="login2Youtube">
+        <classes>
+            <class name="YouTubeLogin">
+            </class>
+        </classes>
+    </test>
+</suite>
