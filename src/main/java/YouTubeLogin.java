@@ -7,7 +7,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.testng.Assert;
 import org.testng.ITestContext;
+import org.testng.Reporter;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
@@ -61,17 +63,21 @@ public class YouTubeLogin
 		String loginButton = "//ytd-button-renderer[@class='style-scope ytd-masthead style-suggestive size-small']/a[@class='yt-simple-endpoint style-scope ytd-button-renderer' and 1]/paper-button[@id='button' and @class='style-scope ytd-button-renderer style-suggestive size-small' and 1]/yt-formatted-string[@id='text' and @class='style-scope ytd-button-renderer style-suggestive size-small' and 1]";
 		String emailTextBox  = "identifierId";
 		WebElement element = driver.findElement(By.xpath(loginButton));
+		Reporter.log("Verify login button exist");
+		Assert.assertNotNull(element);
 		element.click();
 		element = driver.findElement(By.id(emailTextBox));
 		element.sendKeys(seleniumEmail);
 		element = driver.findElement(By.cssSelector(".RveJvd"));
+		Assert.assertNotNull(element);
 		element.click();
 		Thread.sleep(2000);
 		element = driver.findElement(By.cssSelector("input[type=password]"));
 		element.sendKeys(seleniumPassword);
 		element = driver.findElement(By.cssSelector(".CwaK9"));
+		Assert.assertNotNull(element);
 		element.click();
-	//	driver.close();
+		driver.close();
 	}
 
 }
