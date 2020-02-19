@@ -1,5 +1,7 @@
-import org.apache.log4j.Logger;
-import org.openqa.selenium.By;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -9,25 +11,23 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.testng.Assert;
 import org.testng.ITestContext;
-import org.testng.Reporter;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
 
+import Pages.YouTubeLoginPage;
+
 public class YouTubeLogin
 {
-	private static final Logger logger = Logger.getLogger(YouTubeLogin.class);
 	private WebDriver driver;
-	private String seleniumEmail;
-	private String seleniumPassword ;
-	@BeforeSuite
-	public void setProperty(ITestContext context) throws InterruptedException
+	WebElement element = null;
+	YouTubeLoginPage youTubeLoginPage = null;
+
+	@BeforeSuite public void setProperty(ITestContext context) throws InterruptedException
 	{
 		String seleniumBrowser = context.getCurrentXmlTest().getParameter("selenium.browser");
 		String seleniumUrl = context.getCurrentXmlTest().getParameter("selenium.url");
-		seleniumEmail = context.getCurrentXmlTest().getParameter("selenium.email");
-		seleniumPassword = context.getCurrentXmlTest().getParameter("selenium.password");
 
 		ClassLoader loader = YouTubeLogin.class.getClassLoader();
 		if (seleniumBrowser.equalsIgnoreCase("chrome"))
@@ -55,26 +55,23 @@ public class YouTubeLogin
 			driver = new InternetExplorerDriver(capabilities);
 		}
 		driver.get(seleniumUrl);
+		youTubeLoginPage = new YouTubeLoginPage(driver, context);
 	}
 
-	@Test
-	public void login2Youtube() throws InterruptedException
+	@Test public void login2Youtube() throws InterruptedException
 	{
-		String loginButton = "//ytd-button-renderer[@class='style-scope ytd-masthead style-suggestive size-small']/a[@class='yt-simple-endpoint style-scope ytd-button-renderer' and 1]/paper-button[@id='button' and @class='style-scope ytd-button-renderer style-suggestive size-small' and 1]/yt-formatted-string[@id='text' and @class='style-scope ytd-button-renderer style-suggestive size-small' and 1]";
-		String emailTextBox  = "identifierId";
-		WebElement element = driver.findElement(By.xpath(loginButton));
-		Reporter.log("Verify login button exist");
+		element = youTubeLoginPage.getLoginButtonElement();
 		Assert.assertNotNull(element);
 		element.click();
-		element = driver.findElement(By.id(emailTextBox));
-		element.sendKeys(seleniumEmail);
-		element = driver.findElement(By.cssSelector(".RveJvd"));
+		element = youTubeLoginPage.getEmailTextBoxElement();
+		element.sendKeys(youTubeLoginPage.getEmail());
+		element = youTubeLoginPage.getEmailNextElement();
 		Assert.assertNotNull(element);
 		element.click();
 		Thread.sleep(2000);
-		element = driver.findElement(By.cssSelector("input[type=password]"));
-		element.sendKeys(seleniumPassword);
-		element = driver.findElement(By.cssSelector(".CwaK9"));
+		element = youTubeLoginPage.getPasswordTextBoxElement();
+		element.sendKeys(youTubeLoginPage.getPassword());
+		element = youTubeLoginPage.getPasswordNextElement();
 		Assert.assertNotNull(element);
 		element.click();
 		driver.close();
